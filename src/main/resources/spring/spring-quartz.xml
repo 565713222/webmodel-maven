@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:task="http://www.springframework.org/schema/task" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    		http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/task 
+            http://www.springframework.org/schema/task/spring-task.xsd">
+
+	<!-- 注入需要调度的类 -->
+	<bean id="addUserTask" class="com.webmodel.task.AddUserTask"></bean>
+	
+	<!-- 创建任务 -->
+	<bean id="addUser" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 需要调度的对象 -->
+		<property name="targetObject" ref="addUserTask"></property>
+		<!-- 调度对象的方法 -->
+		<property name="targetMethod" value="addData"></property>
+		<!-- 是否允许任务并发执行,false表示不允许 -->
+		<property name="concurrent" value="false"/>
+	</bean>
+	
+	<!-- 创建触发器 -->
+	<!-- simpleTrigger触发器 -->
+	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<!-- 需要触发的任务 -->
+		<property name="jobDetail" ref="addUser"></property>
+		<!-- 循环时间,单位为秒 -->
+		<property name="repeatInterval" value="10000"></property>
+		<!-- 延迟时间,启动后延迟该值指定的时间后开始执行调度,单位毫秒 -->
+		<property name="startDelay" value="5000"></property>
+	</bean>
+	
+	<!-- cronTrigger触发器 ,触发时间更灵活-->
+	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<!-- 需要触发的任务 -->
+		<property name="jobDetail" ref="addUser"></property>
+		<!-- 循环时间,cron表达式表示 -->
+		<property name="cronExpression" value="0/30 * * * * ?"></property>
+		<!-- 延迟时间,启动后延迟该值指定的时间后开始执行调度,单位毫秒 -->
+		<property name="startDelay" value="5000"></property>
+	</bean>
+	
+	<!-- 创建调度器 -->
+	<bean id="jobScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="cronTrigger"/>
+			</list>
+		</property>
+	</bean>
+</beans>

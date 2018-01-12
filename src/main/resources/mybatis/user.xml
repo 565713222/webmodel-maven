@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+	<!-- namespace:隔离sql,对sql进行分类管理  使用mapper代理时,namespace为接口地址（mapper/dao类路径）-->
+<mapper namespace="com.webmodel.dao.UserDao">
+	
+	<!-- 配置缓存 -->
+	<cache></cache>
+	
+	<!--定义resultMap,将返回的结果与User类中的属性作映射关系
+		type:返回结果映射的java对象类型
+		id:resultMap标签的唯一标识符
+	-->
+	<!--id:返回结果集中的唯一标识（即主键）
+		result:	返回结果集中的普通列名
+		column:返回结果集中的列名
+		property:type指定的java对象中的属性名
+	-->
+	<!--association:用于映射关联查询中的单个信息 ，比如User
+		property:关联查询信息中需要映射的属性(比如order中的User对象属性)
+		javaType:需要映射的属性的对象类型（比如order中user属性类型为User）
+	
+		<association property="user" javaType="User">       
+			<id column="user_id" property="id"/>
+			<result column="username" property="username"/>
+		</association>
+	-->		 
+	<resultMap type="user" id="userMap">
+		<id column="id" property="id"/>
+		<result column="id" property="id"/>
+		<result column="username" property="username"/>
+		<result column="ctime" property="ctime"/>
+		<result column="mtime" property="mtime"/>
+	</resultMap>
+	
+  	<!-- parameterType:输入参数类型 --> 
+  	<!-- resultType:输出结果类型,查询结果的列名与model中的属性名一致 --> 
+  	<!-- resultMap:输出结果类型,查询结果的列名可以与model中的属性名不一致 --> 
+  	
+  	<select id="getByUsername" resultMap="userMap" parameterType="string">
+  		select * from user_info where username=#{username}
+  	</select>
+  	
+  	<select id="login" resultType="string" parameterType="string">
+  		SELECT id FROM user_info WHERE username=#{username} AND password=#{password}
+  	</select>
+  	
+  	<insert id="save" parameterType="user" >
+  		insert into user_info(id,username,password,ctime,mtime) 
+  		values(#{id},#{username},#{password},#{ctime},#{mtime})
+  	</insert>
+  	
+  	<update id="update" parameterType="user">
+  		update user_info set mtime=#{mtime} where id=#{id}
+  	</update>
+  	
+</mapper>

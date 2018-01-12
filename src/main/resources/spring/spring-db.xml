@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        	http://www.springframework.org/schema/beans/spring-beans.xsd
+        	http://www.springframework.org/schema/tx 
+			http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+		<property name="url" value="${jdbc.url}" />
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<!-- 最大有效连接数 ,设置为负数，则表示不限制-->
+		<property name="maxTotal" value="${jdbc.maxTotal}" />
+		<!-- 最大空闲连接数,超出设置则连接将被回收,设置为负数，则表示不限制 -->
+		<property name="maxIdle" value="${jdbc.maxIdle}" />
+		<!-- 最小空闲连接数,超出设置则连接将被创建,设置为0，则表示不创建 -->
+		<property name="minIdle" value="${jdbc.minIdle}" />
+		<!-- 初始化的连接数 -->
+		<property name="initialSize" value="${jdbc.initialSize}" />
+		<!-- 设置该连接池的预处理语句池是否生效 -->
+		<property name="poolPreparedStatements" value="false" />
+		<!-- 指明对象是否需要进行校验,校验失败则从池中释放 -->
+		<property name="testWhileIdle" value="true"/>
+		<!-- 在连接池返回连接给调用者前用来进行连接校验的查询sql-->
+		<property name="validationQuery" value="SELECT 1"/>
+		<!-- 指明在从池中租借对象时是否要进行校验，如果对象校验失败，则对象将从池子释放，然后我们将尝试租借另一个 -->
+		<property name="testOnBorrow" value="true"/>
+	</bean>
+	
+	<!--事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 事务配置 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+</beans>  
