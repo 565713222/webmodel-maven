@@ -36,7 +36,7 @@
 		<!-- 需要触发的任务 -->
 		<property name="jobDetail" ref="addUser"></property>
 		<!-- 循环时间,cron表达式表示 -->
-		<property name="cronExpression" value="0/30 * * * * ?"></property>
+		<property name="cronExpression" value="0 0/1 * * * ?"></property>
 		<!-- 延迟时间,启动后延迟该值指定的时间后开始执行调度,单位毫秒 -->
 		<property name="startDelay" value="5000"></property>
 	</bean>

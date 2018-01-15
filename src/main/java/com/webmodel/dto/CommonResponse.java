@@ -1,9 +1,15 @@
 package com.webmodel.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 public class CommonResponse {
 	private int code;			//状态码
+	@JsonInclude(Include.NON_NULL)
 	private String msg;			//提示信息
+	@JsonInclude(Include.NON_NULL)
 	private Integer total;		//总数
+	@JsonInclude(Include.NON_NULL)
 	private Object data;		//数据
 	
 	public CommonResponse(){

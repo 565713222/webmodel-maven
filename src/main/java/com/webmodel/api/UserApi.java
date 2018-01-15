@@ -2,17 +2,16 @@ package com.webmodel.api;
 
 import java.io.PrintWriter;
 import java.net.URLEncoder;
-import java.util.HashMap;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.webmodel.domain.User;
+import com.webmodel.dto.ResultCode;
 import com.webmodel.utils.DateUtil;
 import com.webmodel.utils.EncryptionUtil;
 import com.webmodel.utils.IdUtil;
@@ -28,7 +27,7 @@ public class UserApi extends BaseApi {
 		return succ(User.getByUsername(username));
 	}
 	
-	@RequestMapping(value = "/add", method = {RequestMethod.POST})
+	@RequestMapping(value = "/add", method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
 	public Object register() throws Exception{
 		User user = new User();
@@ -55,9 +54,9 @@ public class UserApi extends BaseApi {
 		writer.println(String.format("\"%s\",\"%s\"", user.getUsername(),user.getCtime()));
 	}
 	
-	@RequestMapping(value = "/test", method = {RequestMethod.GET})
+	@RequestMapping(value = "/testRedis", method = {RequestMethod.GET})
 	@ResponseBody
-	public Object test(@ModelAttribute("params") HashMap<String,Object> params) {
+	public Object test() {
 		try {
 			User user = new User();
 			user.setId(IdUtil.getId());
@@ -71,8 +70,8 @@ public class UserApi extends BaseApi {
 			System.out.println(u.getUsername());
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "fail";
+			return error(ResultCode.ERROR,"测试失败");
 		}
-		return "succ";
+		return succ();
 	}
 }
