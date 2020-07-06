@@ -1,2 +1,2 @@
 # WebModel
-spring+mybatis+mysql+maven+git+eclipse
+spring+mybatis+mysql+maven
